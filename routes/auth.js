@@ -8,6 +8,8 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
+router.get('/reset', authController.getRest);
+
 router.post('/login', authController.postLogin);
 
 router.post('/logout', authController.postLogout);
