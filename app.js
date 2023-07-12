@@ -16,6 +16,8 @@ const errorController = require('./controllers/error');
 //const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
+const config = require('./config');
+
 const MONGODB_URI = 'mongodb+srv://Tomer:snwtkgIDbTgvjiR2@cluster0.7bkvtlq.mongodb.net/shop?retryWrites=true&w=majority';
 
 // Express exports a function, so we execute it as one
@@ -63,7 +65,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Lets us serve files statically (not handled by express router), direcly forwarded to the file system
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'my secret',
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: store
