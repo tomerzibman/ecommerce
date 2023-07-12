@@ -12,6 +12,8 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
     cart: {
         items: [{
             // refer to some Product id, User will have some products in their cart
