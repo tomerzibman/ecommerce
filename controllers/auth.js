@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const config = require('../config');
+const validator = require('express-validator');
 
 const User = require('../models/user');
 
@@ -85,6 +86,16 @@ exports.postSignup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
+    const errors = validator.validationResult(req);
+    if(!errors.isEmpty()) {
+        console.log(errors.array());
+        // 402 common code for invlaid input
+        return res.status(402).render('auth/signup', {
+            path: '/signup',
+            pageTitle: 'Signup',
+            errorMessage: errors.array()[0].msg
+        });
+    }
     User.findOne({email: email}).then(userDoc => {
         if(userDoc) {
             console.log('Email already exists!');
