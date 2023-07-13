@@ -40,7 +40,8 @@ exports.getSignup = (req, res, next) => {
         path: '/signup',
         pageTitle: 'Signup',
         errorMessage: message,
-        oldInput: { email: "", password: "", confirmPassword: "" }
+        oldInput: { email: "", password: "", confirmPassword: "" },
+        validationErrors: []
     });
 };
 
@@ -57,7 +58,8 @@ exports.postLogin = (req, res, next) => {
             path: '/signup',
             pageTitle: 'Signup',
             errorMessage: errors.array()[0].msg,
-            oldInput: { email: "", password: "", confirmPassword: "" }
+            oldInput: { email: "", password: "", confirmPassword: "" },
+            validationErrors: []
         });
     }
     User.findOne({email: email}).then(user => {
@@ -108,7 +110,8 @@ exports.postSignup = (req, res, next) => {
             path: '/signup',
             pageTitle: 'Signup',
             errorMessage: errors.array()[0].msg,
-            oldInput: { email: email, password: password, confirmPassword: confirmPassword }
+            oldInput: { email: email, password: password, confirmPassword: confirmPassword },
+            validationErrors: errors.array()
         });
     }
     bcrypt.hash(password, 12).then(hashedPassword => {
