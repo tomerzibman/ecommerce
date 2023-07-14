@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const validator = require('express-validator');
 
 // Data fetching with mongoose:
 // SELECTING: we can do Product.find().select('title price -_id') to retireive all products but only

@@ -17,8 +17,14 @@ router.get('/reset/:token', authController.getNewPassword);
 router.post(
     '/login',
     [
-        body('email').isEmail().withMessage('Not a valid E-mail'),
-        body('password').isLength({min: 6}).withMessage('Password must be of length at least 6')
+        body('email')
+            .isEmail()
+            .withMessage('Not a valid E-mail')
+            .normalizeEmail(),
+        body('password')
+            .isLength({min: 6})
+            .withMessage('Password must be of length at least 6')
+            .trim()
     ],
     authController.postLogin
 );
@@ -38,14 +44,20 @@ router.post(
                         return Promise.reject('Email already exists, please pick a different one');
                     }
                 });
-            }),
-        check('password').isLength({min: 6}).withMessage('Password length must be at least 6'),
-        body('confirmPassword').custom((value, { req }) => {
-            if (value !== req.body.password) {
-                throw new Error('Passwords do not match');
-            }
-            return true;
-        })
+            })
+            .normalizeEmail(),
+        body('password')
+            .isLength({min: 6})
+            .withMessage('Password length must be at least 6')
+            .trim(),
+        body('confirmPassword')
+            .custom((value, { req }) => {
+                if (value !== req.body.password) {
+                    throw new Error('Passwords do not match');
+                }
+                return true;
+            })
+            .trim()
     ],
     authController.postSignup
 );
