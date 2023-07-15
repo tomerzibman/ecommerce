@@ -13,7 +13,10 @@ exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
         pageTitle: 'Add Product', 
         path: '/admin/add-product',
-        editing: false
+        editing: false,
+        addingBack: false,
+        validationErrors: [],
+        errorMessage: ""
     });
 };
 
@@ -22,6 +25,25 @@ exports.postAddProduct = (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
+
+    const errors = validator.validationResult(req);
+    if(!errors.isEmpty()) {
+        const product = {
+            title: title,
+            imageUrl: imageUrl,
+            price: price,
+            description: description
+        };
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Add Product',
+            path: '/admin/add-product',
+            editing: false,
+            addingBack: true,
+            product: product,
+            validationErrors: errors.array(),
+            errorMessage: errors.array()[0].msg
+        });
+    }
     // This is a mongoose Schema object, we pass args for fields in js object (left side of colon refers to keys defined in Schema, right side are values)
     const product = new Product({title: title, price: price, description: description, imageUrl: imageUrl, userId: req.user._id});
     // mongoose gives us a save() method we can call
@@ -40,6 +62,7 @@ exports.getEditProduct = (req, res, next) => {
         console.log('not in edit mode');
         return res.redirect('/');
     }
+
     const pid = req.params.productId;
     Product.findById(pid).then(product => {
         if(!product) {
@@ -49,7 +72,10 @@ exports.getEditProduct = (req, res, next) => {
             pageTitle: 'Edit Product', 
             path: '/admin/edit-product',
             editing: editMode,
-            product: product
+            addingBack: false,
+            product: product,
+            validationErrors: [],
+            errorMessage: ""
         });
     }).catch(err => console.log(err));
 };
@@ -63,6 +89,26 @@ exports.postEditProduct = (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedDescription = req.body.description;
 
+    const prod = {
+        title: updatedTitle,
+        price: updatedPrice,
+        imageUrl: updatedImageUrl,
+        description: updatedDescription,
+        _id: id
+    };
+
+    const errors = validator.validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Edit Product', 
+            path: '/admin/edit-product',
+            editing: true,
+            addingBack: false,
+            product: prod,
+            validationErrors: errors.array(),
+            errorMessage: errors.array()[0].msg
+        });
+    }
     Product.findById(id).then(product => {
         if(product.userId.toString() !== req.user._id.toString()) {
             return res.redirect('/');
