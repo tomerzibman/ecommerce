@@ -1,4 +1,5 @@
 const express = require('express');
+const { check, body } = require('express-validator');
 
 const path = require('path');
 
@@ -14,11 +15,45 @@ router.get('/add-product', isAuth, adminController.getAddProduct);
 router.get('/products', isAuth, adminController.getProducts);
 
 // /admin/add-product => POST
-router.post('/add-product', isAuth, adminController.postAddProduct);
+router.post('/add-product', isAuth, [
+    body('title')
+        .notEmpty().withMessage("Title cannot be empty")
+        .isString()
+        .trim(),
+    body('price')
+        .notEmpty().withMessage("Price should not be empty")
+        .isFloat().withMessage("Price should be a decimal number")
+        .custom((value, { req }) => {
+            return value > 0;
+        }).withMessage("Price must be positive"),
+    body('description')
+        .notEmpty().withMessage("Description cannot be empty")
+        .trim(),
+    body('imageUrl')
+        .notEmpty().withMessage("Image URL cannot be empty")
+        //.isURL().withMessage("Image URL must be a valid URL")
+], adminController.postAddProduct);
 
 router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
 
-router.post('/edit-product', isAuth, adminController.postEditProduct);
+router.post('/edit-product', isAuth, [
+    body('title')
+        .notEmpty().withMessage("Title cannot be empty")
+        .isString()
+        .trim(),
+    body('price')
+        .notEmpty().withMessage("Price cannot be empty")
+        .isFloat().withMessage("Price must be a number")
+        .custom((value, { req }) => {
+            return value > 0;
+        }).withMessage("Price must be positive"),
+    body('description')
+        .notEmpty().withMessage("Description cannot be empty")
+        .trim(),
+    body('imageUrl')
+        .notEmpty().withMessage("Image URL cannot be empty")
+        //.isURL().withMessage("Image URL must be a valid URL")
+], adminController.postEditProduct);
 
 router.post('/delete-product', isAuth, adminController.postDeleteProduct);
 
