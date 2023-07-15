@@ -100,7 +100,7 @@ exports.postLogin = (req, res, next) => {
     }).catch(err => {
         const error = new Error(err);
         error.httpStatusCode = 500;
-        return next(err);
+        return next(error);
     });
 
     // User.findById('64a9f275f41d1c743d5c7e0c').then(user => {
@@ -147,7 +147,7 @@ exports.postSignup = (req, res, next) => {
         }).catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
     });
 };
@@ -202,7 +202,7 @@ exports.postReset = (req, res, next) => {
         }).catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
     })
 };
@@ -230,7 +230,7 @@ exports.getNewPassword = (req, res, next) => {
     }).catch(err => {
         const error = new Error(err);
         error.httpStatusCode = 500;
-        return next(err);
+        return next(error);
     });
 };
 
@@ -258,6 +258,6 @@ exports.postNewPassword = (req, res, next) => {
         }).catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 };
