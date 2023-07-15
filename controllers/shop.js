@@ -10,7 +10,11 @@ exports.getIndex = (req, res, next) => {
             pageTitle: 'Shop', 
             path: '/'
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -20,7 +24,11 @@ exports.getProducts = (req, res, next) => {
             pageTitle: 'All Products', 
             path: '/products'
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.getProduct = (req, res, next) => {
@@ -33,7 +41,11 @@ exports.getProduct = (req, res, next) => {
             pageTitle: "Product Detail", 
             path: "/products"
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.getCart = (req, res, next) => {
@@ -44,7 +56,11 @@ exports.getCart = (req, res, next) => {
             path: '/cart',
             products: products
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.postCart = (req, res, next) => {
@@ -55,7 +71,9 @@ exports.postCart = (req, res, next) => {
         res.redirect('/cart');
         console.log(result);
     }).catch(err => {
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);;
     });
     // let fetchedCart;
     // let newQty = 1;
@@ -84,7 +102,9 @@ exports.postCartDeleteProduct = (req, res, next) => {
     req.user.deleteItemFromCart(prodId).then(() => {
         res.redirect('/cart');
     }).catch(err => {
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
     });
     
     // req.user.getCart().then(cart => {
@@ -104,7 +124,11 @@ exports.getOrders = (req, res, next) => {
             path: '/orders',
             orders: orders
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
     // include gets the related products to each order in .products
     // works since we have a realation b/w Order and Product
     // req.user.getOrders().then(orders => {
@@ -134,7 +158,11 @@ exports.postOrder = (req, res, next) => {
         return req.user.clearCart();
     }).then(() => {
         res.redirect('/orders');
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
     // req.user.addOrder().then(result => {
     //     res.redirect('/orders');
     // }).catch(err => console.log(err));

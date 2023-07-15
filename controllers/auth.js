@@ -66,7 +66,7 @@ exports.postLogin = (req, res, next) => {
     }
     User.findOne({email: email}).then(user => {
         if (!user) {
-            console.log('No registerd user with that email!');
+            // No registers used with that email
             return res.status(422).render('auth/login', {
                 path: '/login',
                 pageTitle: 'Login',
@@ -84,7 +84,7 @@ exports.postLogin = (req, res, next) => {
                     res.redirect('/');
                 });
             } else {
-                console.log('passwords do not match!');
+                // passwords do not match
                 return res.status(422).render('auth/login', {
                     path: '/login',
                     pageTitle: 'Login',
@@ -97,7 +97,11 @@ exports.postLogin = (req, res, next) => {
             console.log(err);
             res.redirect('/login');
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 
     // User.findById('64a9f275f41d1c743d5c7e0c').then(user => {
     //     // sets a new field to req called user, setting it to user we found
@@ -140,7 +144,11 @@ exports.postSignup = (req, res, next) => {
             from: 'shop@node-complete.com',
             subject: 'Signup Succeeded!',
             html: '<h1>You successfully signed up!</h1>'
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
     });
 };
 
@@ -191,7 +199,11 @@ exports.postReset = (req, res, next) => {
                     <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>
                 `
             });
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
     })
 };
 
@@ -215,7 +227,11 @@ exports.getNewPassword = (req, res, next) => {
             userId: user._id.toString(),
             passwordToken: token
         });
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.postNewPassword = (req, res, next) => {
@@ -239,5 +255,9 @@ exports.postNewPassword = (req, res, next) => {
             return user.save();
         }).then(() => {
             res.redirect('/login');
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 };
