@@ -78,10 +78,15 @@ app.use((req, res, next) => {
         return next();
     }
     User.findById(req.session.user._id).then(user => {
+        if(!user) {
+            return next();
+        }
         // sets a new field to req called user, setting it to user we found
         req.user = user;
         next();
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        throw new Error(err);
+    });
 });
 
 app.use((req, res, next) => {
@@ -96,7 +101,11 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get('/500', errorController.get500);
 app.use(errorController.get404);
+app.use((error, req, res, next) => {
+    res.redirect('/500');
+});
 
 // Calls mongoConnect function and when successfull we listen for requests on port 3000
 // mongoConnect(() => {
