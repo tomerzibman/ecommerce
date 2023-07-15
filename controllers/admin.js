@@ -103,7 +103,7 @@ exports.postEditProduct = (req, res, next) => {
             pageTitle: 'Edit Product', 
             path: '/admin/edit-product',
             editing: true,
-            addingBack: false,
+            addingBack: true,
             product: prod,
             validationErrors: errors.array(),
             errorMessage: errors.array()[0].msg

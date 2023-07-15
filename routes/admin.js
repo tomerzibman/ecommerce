@@ -22,7 +22,10 @@ router.post('/add-product', isAuth, [
         .trim(),
     body('price')
         .notEmpty().withMessage("Price should not be empty")
-        .isFloat().withMessage("Price should be a decimal number"),
+        .isFloat().withMessage("Price should be a decimal number")
+        .custom((value, { req }) => {
+            return value > 0;
+        }).withMessage("Price must be positive"),
     body('description')
         .notEmpty().withMessage("Description cannot be empty")
         .trim(),
@@ -40,7 +43,10 @@ router.post('/edit-product', isAuth, [
         .trim(),
     body('price')
         .notEmpty().withMessage("Price cannot be empty")
-        .isFloat().withMessage("Price must be a number"),
+        .isFloat().withMessage("Price must be a number")
+        .custom((value, { req }) => {
+            return value > 0;
+        }).withMessage("Price must be positive"),
     body('description')
         .notEmpty().withMessage("Description cannot be empty")
         .trim(),
