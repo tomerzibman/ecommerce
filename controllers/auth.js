@@ -66,7 +66,7 @@ exports.postLogin = (req, res, next) => {
     }
     User.findOne({email: email}).then(user => {
         if (!user) {
-            console.log('No registerd user with that email!');
+            // No registers used with that email
             return res.status(422).render('auth/login', {
                 path: '/login',
                 pageTitle: 'Login',
@@ -84,7 +84,7 @@ exports.postLogin = (req, res, next) => {
                     res.redirect('/');
                 });
             } else {
-                console.log('passwords do not match!');
+                // passwords do not match
                 return res.status(422).render('auth/login', {
                     path: '/login',
                     pageTitle: 'Login',
