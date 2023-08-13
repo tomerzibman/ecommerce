@@ -28,10 +28,7 @@ router.post('/add-product', isAuth, [
         }).withMessage("Price must be positive"),
     body('description')
         .notEmpty().withMessage("Description cannot be empty")
-        .trim(),
-    body('imageUrl')
-        .notEmpty().withMessage("Image URL cannot be empty")
-        //.isURL().withMessage("Image URL must be a valid URL")
+        .trim()
 ], adminController.postAddProduct);
 
 router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
@@ -49,10 +46,7 @@ router.post('/edit-product', isAuth, [
         }).withMessage("Price must be positive"),
     body('description')
         .notEmpty().withMessage("Description cannot be empty")
-        .trim(),
-    body('imageUrl')
-        .notEmpty().withMessage("Image URL cannot be empty")
-        //.isURL().withMessage("Image URL must be a valid URL")
+        .trim()
 ], adminController.postEditProduct);
 
 router.post('/delete-product', isAuth, adminController.postDeleteProduct);
