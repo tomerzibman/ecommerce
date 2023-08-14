@@ -8,13 +8,28 @@ const Order = require('../models/order');
 const product = require('../models/product');
 // const mongoose = require('mongoose');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getIndex = (req, res, next) => {
-    // .find() in mongoose gives all docs in collection
-    Product.find().then(products => {
+    const page = +req.query.page || 1;
+    console.log(page+1);
+    let totalProducts = 0;
+
+    Product.find().countDocuments().then(numProducts => {
+        totalProducts = numProducts;
+        // .find() in mongoose gives all docs in collection
+        return Product.find().skip((page - 1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE);
+    }).then(products => {
         res.render('shop/index', {
             prods: products, 
             pageTitle: 'Shop', 
-            path: '/'
+            path: '/',
+            page: page,
+            hasNextPage: ITEMS_PER_PAGE * page < totalProducts,
+            hasPrevPage: page > 1,
+            nextPage: page + 1,
+            prevPage: page - 1,
+            lastPage: Math.ceil(totalProducts / ITEMS_PER_PAGE)
         });
     }).catch(err => {
         const error = new Error(err);
@@ -24,11 +39,25 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-    Product.find().then(products => {
+    const page = +req.query.page || 1;
+    console.log(page+1);
+    let totalProducts = 0;
+
+    Product.find().countDocuments().then(numProducts => {
+        totalProducts = numProducts;
+        // .find() in mongoose gives all docs in collection
+        return Product.find().skip((page - 1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE);
+    }).then(products => {
         res.render('shop/product-list', {
             prods: products, 
-            pageTitle: 'All Products', 
-            path: '/products'
+            pageTitle: 'Products', 
+            path: '/products',
+            page: page,
+            hasNextPage: ITEMS_PER_PAGE * page < totalProducts,
+            hasPrevPage: page > 1,
+            nextPage: page + 1,
+            prevPage: page - 1,
+            lastPage: Math.ceil(totalProducts / ITEMS_PER_PAGE)
         });
     }).catch(err => {
         const error = new Error(err);
