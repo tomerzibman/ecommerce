@@ -194,5 +194,4 @@ exports.deleteProduct = (req, res, next) => {
     }).catch(err => {
         res.status(500).json({message: 'Deleting product failed!'});
     });
-    // return res.redirect('/admin/products');
 };
