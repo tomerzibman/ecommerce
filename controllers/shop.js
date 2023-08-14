@@ -12,7 +12,6 @@ const ITEMS_PER_PAGE = 2;
 
 exports.getIndex = (req, res, next) => {
     const page = +req.query.page || 1;
-    console.log(page+1);
     let totalProducts = 0;
 
     Product.find().countDocuments().then(numProducts => {
@@ -40,7 +39,6 @@ exports.getIndex = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
     const page = +req.query.page || 1;
-    console.log(page+1);
     let totalProducts = 0;
 
     Product.find().countDocuments().then(numProducts => {
