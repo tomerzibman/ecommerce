@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
     products: [{
-        // type Object is a shortcut, will take *(any js object)*
         product: { type: Object, required: true }, 
         quantity: { type: Number, required: true }
     }],

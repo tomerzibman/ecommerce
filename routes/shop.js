@@ -11,9 +11,6 @@ router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);
 
-// : tells express router that there is a variable segment
-// This one is named 'productId'
-// We will be able to extract that info from that name
 router.get('/products/:productId', shopController.getProduct);
 
 router.get('/cart', isAuth, shopController.getCart);

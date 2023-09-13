@@ -4,7 +4,6 @@ exports.get404 = (req, res, next) => {
         path: '/404',
         isAuthenticated: req.session.isLoggedIn
     });
-    //res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 };
 
 exports.get500 = (req, res, next) => {
@@ -13,5 +12,4 @@ exports.get500 = (req, res, next) => {
         path: '/500',
         isAuthenticated: req.session.isLoggedIn
     });
-    //res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 };

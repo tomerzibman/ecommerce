@@ -8,7 +8,6 @@ const PDFDocument = require('pdfkit');
 const Product = require('../models/product');
 const Order = require('../models/order');
 const product = require('../models/product');
-// const mongoose = require('mongoose');
 
 const ITEMS_PER_PAGE = 2;
 
@@ -18,7 +17,6 @@ exports.getIndex = (req, res, next) => {
 
     Product.find().countDocuments().then(numProducts => {
         totalProducts = numProducts;
-        // .find() in mongoose gives all docs in collection
         return Product.find().skip((page - 1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE);
     }).then(products => {
         res.render('shop/index', {
@@ -45,7 +43,6 @@ exports.getProducts = (req, res, next) => {
 
     Product.find().countDocuments().then(numProducts => {
         totalProducts = numProducts;
-        // .find() in mongoose gives all docs in collection
         return Product.find().skip((page - 1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE);
     }).then(products => {
         res.render('shop/product-list', {
@@ -68,8 +65,6 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
     const prodId = req.params.productId;
-    // Note: findByPk gives only one item, not in a list
-    // mongoose has findById method, can pass a string and it will convert it to an ObjectId for us
     Product.findById(prodId).then((product) => {
         res.render('shop/product-detail', {
             product: product, 
@@ -110,26 +105,6 @@ exports.postCart = (req, res, next) => {
         error.httpStatusCode = 500;
         return next(error);;
     });
-    // let fetchedCart;
-    // let newQty = 1;
-    // req.user.getCart().then(cart => {
-    //     fetchedCart = cart;
-    //     return cart.getProducts({where: {id: prodId}});
-    // }).then(products => {
-    //     let product;
-    //     if (products.length > 0) {
-    //         product = products[0];
-    //     }
-    //     if (product) {
-    //         newQty = product.cartItem.quantity + 1;
-    //         return product;
-    //     }
-    //     return Product.findByPk(prodId);
-    // }).then(product => {
-    //     return fetchedCart.addProduct(product, {through: {quantity: newQty}});
-    // }).then(() => {
-    //     res.redirect('/cart');
-    // }).catch(err => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
@@ -141,15 +116,6 @@ exports.postCartDeleteProduct = (req, res, next) => {
         error.httpStatusCode = 500;
         return next(error);
     });
-    
-    // req.user.getCart().then(cart => {
-    //     return cart.getProducts({where: {id: prodId}});
-    // }).then(products => {
-    //     const product = products[0];
-    //     return product.cartItem.destroy();
-    // }).then(result => {
-    //     res.redirect('/cart');
-    // }).catch(err => console.log(err));
 };
 
 exports.getCheckout = (req, res, next) => {
@@ -208,21 +174,11 @@ exports.getOrders = (req, res, next) => {
         error.httpStatusCode = 500;
         return next(error);
     });
-    // include gets the related products to each order in .products
-    // works since we have a realation b/w Order and Product
-    // req.user.getOrders().then(orders => {
-    //     res.render('shop/orders', {
-    //         pageTitle: 'Your Orders', 
-    //         path: '/orders',
-    //         orders: orders
-    //     });
-    // }).catch(err => console.log(err));
 };
 
 exports.postOrder = (req, res, next) => {
     req.user.populate('cart.items.productId').then(user => {
         const products = req.user.cart.items.map(item => {
-            // even though we populated productId, we need to do _doc and spread to store full product data in db
             return { product: { ...item.productId._doc }, quantity: item.quantity };
         });
         const order = new Order({
@@ -242,9 +198,6 @@ exports.postOrder = (req, res, next) => {
         error.httpStatusCode = 500;
         return next(error);
     });
-    // req.user.addOrder().then(result => {
-    //     res.redirect('/orders');
-    // }).catch(err => console.log(err));
 };
 
 exports.getInvoice = (req, res, next) => {
@@ -276,17 +229,6 @@ exports.getInvoice = (req, res, next) => {
         pdfDoc.fontSize(14).text('Total: $' + total);
 
         pdfDoc.end();
-        // fs.readFile(invoicePath, (err, data) => {
-        //     if (err){
-        //         return next();
-        //     }
-        //     res.setHeader('Content-Type', 'application/pdf');
-        //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-        //     res.send(data);
-        // });
-        // const file = fs.createReadStream(invoicePath);
-        
-        // file.pipe(res);
     }).catch(err => next(err));
 };
 

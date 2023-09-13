@@ -3,15 +3,7 @@ const fileHelper = require('../util/file');
 const Product = require('../models/product');
 const validator = require('express-validator');
 
-// Data fetching with mongoose:
-// SELECTING: we can do Product.find().select('title price -_id') to retireive all products but only
-// select feilds title and price, explicitly excluding _id (_id always gets included unless explicitly exluded)
-// POPULATING: we can do Product.find().populate('userId', 'name'), and this will put the user document inside the userId
-// feild, instead of just the _id. The second argument corresponds to select as explained above
-
 exports.getAddProduct = (req, res, next) => {
-    // Sets header automaically (deafult is res.setHeader('Content-Type', 'text/html');)
-    //res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
     res.render('admin/edit-product', {
         pageTitle: 'Add Product', 
         path: '/admin/add-product',
@@ -59,10 +51,7 @@ exports.postAddProduct = (req, res, next) => {
 
     const imageUrl = image.path;
 
-    // This is a mongoose Schema object, we pass args for fields in js object (left side of colon refers to keys defined in Schema, right side are values)
     const product = new Product({title: title, price: price, description: description, imageUrl: imageUrl, userId: req.user._id});
-    // mongoose gives us a save() method we can call
-    // technically not a promise but it does give .then() and .catch() methods we can use in the same way
     product.save().then(result => {
         console.log('Created Product');
         res.redirect('/admin/products');
@@ -102,8 +91,6 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-    // returning a promise in a .then() will let you chain another .then() with the returned promise
-    // only need one .catch(), it will catch errors from any .then()
     const id = req.body.productId;
     const updatedTitle = req.body.title;
     const image = req.file;

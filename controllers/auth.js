@@ -102,16 +102,6 @@ exports.postLogin = (req, res, next) => {
         error.httpStatusCode = 500;
         return next(error);
     });
-
-    // User.findById('64a9f275f41d1c743d5c7e0c').then(user => {
-    //     // sets a new field to req called user, setting it to user we found
-    //     req.session.isLoggedIn = true;
-    //     req.session.user = user;
-    //     req.session.save(err => {
-    //         console.log(err);
-    //         res.redirect('/');
-    //     });
-    // }).catch(err => console.log(err));
 };
 
 exports.postSignup = (req, res, next) => {
